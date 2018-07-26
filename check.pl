@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Term::ANSIColor;
 
+
 status("Time", "/bin/date '+%Y-%m-%d %H:%M:%S'");
 #status("CPU", "/usr/bin/mpstat");
 status("Memory", "/bin/grep '^Mem' /proc/meminfo && awk '/^MemFree/ {free=\$2} /^MemTotal/ {total=\$2} END {print \"MemUsage:         \" (total-free) / total * 100  \" \%\"  }' /proc/meminfo");
