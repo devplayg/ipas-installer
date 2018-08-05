@@ -3,12 +3,11 @@ use strict;
 use warnings;
 use Term::ANSIColor;
 
-
 status("Time", "/bin/date '+%Y-%m-%d %H:%M:%S'");
 #status("CPU", "/usr/bin/mpstat");
-status("Memory", "/bin/grep '^Mem' /proc/meminfo && awk '/^MemFree/ {free=\$2} /^MemTotal/ {total=\$2} END {print \"MemUsage:         \" (total-free) / total * 100  \" \%\"  }' /proc/meminfo");
+#status("Memory", "/bin/grep '^Mem' /proc/meminfo && awk '/^MemFree/ {free=\$2} /^MemTotal/ {total=\$2} END {print \"MemUsage:         \" (total-free) / total * 100  \" \%\"  }' /proc/meminfo");
 status("Disk", "/bin/df");
-statuskv("Service (command, cpu, mem, started, uptime) ", '/bin/ps -C \'scheduler,classifier\' -o "comm,%cpu,%mem,etime,lstart" --no-headers ', "", "classifier,scheduler");
+statuskv("Service (command, cpu, mem, started, uptime) ", '/bin/ps -C \'scheduler,classifier,receiver,mysqld,calculator\' -o "comm,%cpu,%mem,etime,lstart" --no-headers ', "", "classifier,scheduler,receiver,mysqld,calculator");
 statuskv_cut("Listening (service, port)", '/bin/netstat -lntpu | grep -E "^tcp|^udp" | awk \'{ gsub(".*:","",$4); gsub("^LISTEN|.*/","",$6); gsub(".*/","",$7);  print $6$7"\t"$4}\'', "", "mcs,receiver,mysqld");
 #statuskv_cut("Processes (APTX-AM)", '/bin/netstat -lntpu | grep -E "^tcp|^udp" | awk \'{ gsub(".*:","",$4); gsub("^LISTEN|.*/","",$6); gsub(".*/","",$7);  print $6$7"\t"$4}\'', "", "AMServer,httpd");
 statuskv("IP Tables", '/sbin/iptables -n -L INPUT  --line-number | grep "^[0-9]" | awk \'{$1=$2=$3=$4=$5=$6=""; gsub("dpts?:", "", $0);gsub("state NEW", "", $0);  print $0}\' | awk \'{print $2"_"$1"\t "}\' | uniq', "", "80_tcp,8080_tcp");
